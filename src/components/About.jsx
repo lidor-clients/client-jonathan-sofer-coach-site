@@ -15,6 +15,15 @@ export default function About() {
           </h2>
         </div>
 
+        {/* Profile image */}
+        <div className="flex justify-center mb-10">
+          <img
+            src="/og-image.jpeg"
+            alt="יונתן סופר - מאמן ריצה אישי"
+            className="w-40 h-40 rounded-full object-cover border-4 border-orange-500 shadow-lg shadow-orange-600/20"
+          />
+        </div>
+
         {/* Content card */}
         <div className="bg-[#111] border border-gray-800 rounded-2xl p-8 md:p-12 space-y-6">
           <p className="text-gray-300 text-lg leading-relaxed">

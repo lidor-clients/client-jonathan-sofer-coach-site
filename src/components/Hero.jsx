@@ -70,7 +70,8 @@ export default function Hero() {
       {/* Content */}
       <div className="relative z-10 max-w-3xl mx-auto px-6 text-center pt-28 pb-16">
         <p className="text-orange-500 text-xs font-semibold tracking-widest mb-6">
-          מאמן ריצה אישי
+          מאמן ריצה אישי{' '}
+          <strong className="text-white text-sm bg-gradient-to-r from-orange-500 to-red-600 px-2 py-0.5 rounded">אונליין</strong>
         </p>
 
         <h1 className="font-heading font-black leading-none text-white mb-4">
