@@ -1,6 +1,5 @@
-// WhatsApp screenshot images should be placed in public/testimonials/
-// Name them: whatsapp-1.jpg, whatsapp-2.jpg, whatsapp-3.jpg, etc.
-// Update the `images` array below to match your actual file names.
+import { useRef } from 'react'
+
 const images = [
   '/testimonials/whatsapp-1.jpeg',
   '/testimonials/whatsapp-2.jpeg',
@@ -9,6 +8,12 @@ const images = [
 ]
 
 export default function Testimonials() {
+  const scrollRef = useRef()
+
+  const scroll = (dir) => {
+    scrollRef.current.scrollBy({ left: dir * 320, behavior: 'smooth' })
+  }
+
   return (
     <section id="testimonials" className="py-28 bg-[#0a0a0a]">
       <div className="max-w-5xl mx-auto px-6">
@@ -25,21 +30,50 @@ export default function Testimonials() {
           </h2>
         </div>
 
-        {/* WhatsApp screenshots – masonry columns so each image shows at its natural height */}
-        <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-0">
-          {images.map((src, i) => (
-            <div
-              key={i}
-              className="break-inside-avoid mb-6 rounded-2xl overflow-hidden border border-gray-800 bg-[#111] shadow-lg"
-            >
-              <img
-                src={src}
-                alt={`המלצה ${i + 1}`}
-                className="w-full h-auto block"
-                loading="lazy"
-              />
-            </div>
-          ))}
+        {/* Carousel wrapper */}
+        <div className="relative">
+          {/* Left arrow */}
+          <button
+            onClick={() => scroll(-1)}
+            className="absolute -left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-[#1a1a1a] border border-gray-700 hover:border-orange-500 text-gray-400 hover:text-orange-500 flex items-center justify-center transition-all duration-200 shadow-lg"
+            aria-label="הקודם"
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+
+          {/* Scrollable track */}
+          <div
+            ref={scrollRef}
+            className="flex gap-5 overflow-x-auto scroll-smooth pb-4"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {images.map((src, i) => (
+              <div
+                key={i}
+                className="flex-none w-72 rounded-2xl overflow-hidden border border-gray-800 bg-[#111] shadow-lg hover:border-orange-500/40 transition-colors duration-300"
+              >
+                <img
+                  src={src}
+                  alt={`המלצה ${i + 1}`}
+                  className="w-full h-auto block"
+                  loading="lazy"
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Right arrow */}
+          <button
+            onClick={() => scroll(1)}
+            className="absolute -right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-[#1a1a1a] border border-gray-700 hover:border-orange-500 text-gray-400 hover:text-orange-500 flex items-center justify-center transition-all duration-200 shadow-lg"
+            aria-label="הבא"
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
         </div>
       </div>
     </section>
