@@ -1,7 +1,7 @@
 const socials = [
-  { label: 'אינסטגרם', href: '#' },
-  { label: 'פייסבוק', href: '#' },
-  { label: 'יוטיוב', href: '#' },
+  { label: 'אינסטגרם', href: 'https://www.instagram.com/jonysofer?igsh=cnpoMTBmbW80a2k4&utm_source=qr' },
+  { label: 'פייסבוק', href: 'https://www.facebook.com/share/1CJuNW1EJu/?mibextid=wwXIfr' },
+  { label: 'טיקטוק', href: 'https://www.tiktok.com/@jonathan.sofer?_r=1&_t=ZS-943FHyCwyf7' },
 ]
 
 export default function Footer() {
@@ -13,7 +13,7 @@ export default function Footer() {
           <h2 className="font-heading font-black text-3xl text-white mb-1">
             יונתן <span className="text-orange-500">סופר</span>
           </h2>
-          <p className="text-gray-600 text-xs">מאמן כושר אישי מוסמך</p>
+          <p className="text-gray-600 text-xs">מאמן ריצה אישי</p>
         </div>
 
         {/* Socials */}

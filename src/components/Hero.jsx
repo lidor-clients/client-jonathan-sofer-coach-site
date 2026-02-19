@@ -1,4 +1,53 @@
+import { useState, useRef } from 'react'
+import emailjs from '@emailjs/browser'
+
+const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID
+const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID
+const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+
+function validateIsraeliPhone(raw) {
+  const phone = raw.replace(/[\s\-()]/g, '')
+  return /^(\+972|972|0)(5\d{8}|[2-9]\d{7})$/.test(phone)
+}
+
 export default function Hero() {
+  const formRef = useRef()
+  const [status, setStatus] = useState('idle')
+  const [phoneError, setPhoneError] = useState('')
+
+  const handlePhoneBlur = (e) => {
+    const val = e.target.value.trim()
+    if (val && !validateIsraeliPhone(val)) {
+      setPhoneError('מספר טלפון לא תקין. לדוגמה: 050-1234567')
+    }
+  }
+
+  const handlePhoneChange = () => {
+    if (phoneError) setPhoneError('')
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    const phoneVal = formRef.current.user_phone.value.trim()
+    if (!validateIsraeliPhone(phoneVal)) {
+      setPhoneError('מספר טלפון לא תקין. לדוגמה: 050-1234567')
+      return
+    }
+    setStatus('loading')
+    try {
+      await emailjs.sendForm(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        formRef.current,
+        EMAILJS_PUBLIC_KEY,
+      )
+      setStatus('success')
+      formRef.current.reset()
+    } catch {
+      setStatus('error')
+    }
+  }
+
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background */}
@@ -19,54 +68,85 @@ export default function Hero() {
       />
 
       {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
-        <p className="text-orange-500 text-xs font-semibold tracking-widest mb-8">
-          מאמן כושר אישי מוסמך
+      <div className="relative z-10 max-w-3xl mx-auto px-6 text-center pt-28 pb-16">
+        <p className="text-orange-500 text-xs font-semibold tracking-widest mb-6">
+          מאמן ריצה אישי
         </p>
 
-        <h1 className="font-heading font-black leading-none text-white mb-8">
-          <span className="block text-[clamp(4rem,14vw,10rem)]">תתחזק</span>
-          <span className="block text-[clamp(4rem,14vw,10rem)] text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500">
-            תשתנה
+        <h1 className="font-heading font-black leading-none text-white mb-4">
+          <span className="block text-[clamp(2.8rem,9vw,6rem)]">ליווי אישי</span>
+          <span className="block text-[clamp(2.8rem,9vw,6rem)] text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500">
+            1 על 1
           </span>
-          <span className="block text-[clamp(4rem,14vw,10rem)]">תנצח</span>
         </h1>
 
-        <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-12 leading-relaxed">
-          שנה את הגוף ואת הגישה שלך עם תוכניות אימון מותאמות אישית.
-          ללא קיצורי דרך. רק תוצאות אמיתיות.
+        <p className="text-gray-300 text-xl md:text-2xl font-semibold mb-4 leading-snug">
+          תהליך מדויק לרצים שרוצים להשתפר באמת
         </p>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <a
-            href="#contact"
-            className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white px-10 py-4 text-sm font-bold transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-orange-600/25 rounded"
-          >
-            התחל עכשיו
-          </a>
-          <a
-            href="#about"
-            className="border border-gray-700 hover:border-orange-500 text-gray-300 hover:text-white px-10 py-4 text-sm font-bold transition-all duration-300 rounded"
-          >
-            קרא עוד
-          </a>
-        </div>
+        <p className="text-gray-500 text-base md:text-lg max-w-xl mx-auto mb-10 leading-relaxed">
+          תוכנית אישית שמותאמת בדיוק לחיים, ללו״ז ולמטרה שלך
+        </p>
 
-        {/* Stats bar */}
-        <div className="mt-24 grid grid-cols-3 gap-6 max-w-md mx-auto">
-          {[
-            { number: '+8', label: 'שנות ניסיון' },
-            { number: '+200', label: 'מתאמנים' },
-            { number: '95%', label: 'שביעות רצון' },
-          ].map((stat, i) => (
-            <div key={stat.label} className="relative text-center">
-              {i !== 0 && (
-                <div className="absolute right-0 top-1/4 h-1/2 w-px bg-gray-800" />
-              )}
-              <div className="font-heading font-black text-4xl text-orange-500">{stat.number}</div>
-              <div className="text-gray-600 text-[11px] mt-1">{stat.label}</div>
+        {/* Lead form */}
+        <div className="bg-[#111]/80 border border-gray-800 rounded-2xl p-8 max-w-md mx-auto backdrop-blur-sm">
+          <p className="text-white font-bold text-lg mb-6">תשאירו פרטים ואחזור אליכם</p>
+
+          {status === 'success' ? (
+            <div className="text-center py-4">
+              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center mx-auto mb-4">
+                <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <p className="text-white font-bold text-lg mb-1">קיבלתי! אחזור אליך בקרוב.</p>
+              <p className="text-gray-500 text-sm">תודה שהשארת פרטים</p>
             </div>
-          ))}
+          ) : (
+            <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
+              <input
+                name="user_name"
+                type="text"
+                required
+                dir="rtl"
+                placeholder="שם מלא"
+                className="w-full bg-[#1a1a1a] border border-gray-700 hover:border-gray-600 focus:border-orange-500 text-white placeholder-gray-600 rounded-lg px-4 py-3 text-sm outline-none transition-colors duration-200"
+              />
+              <div>
+                <input
+                  name="user_phone"
+                  type="tel"
+                  required
+                  dir="rtl"
+                  placeholder="טלפון"
+                  onBlur={handlePhoneBlur}
+                  onChange={handlePhoneChange}
+                  className={`w-full bg-[#1a1a1a] border text-white placeholder-gray-600 rounded-lg px-4 py-3 text-sm outline-none transition-colors duration-200 ${
+                    phoneError
+                      ? 'border-red-500 focus:border-red-500'
+                      : 'border-gray-700 hover:border-gray-600 focus:border-orange-500'
+                  }`}
+                />
+                {phoneError && <p className="mt-1.5 text-red-400 text-xs text-right">{phoneError}</p>}
+              </div>
+
+              {status === 'error' && (
+                <p className="text-red-400 text-sm text-center">משהו השתבש. נסה שוב.</p>
+              )}
+
+              <button
+                type="submit"
+                disabled={status === 'loading'}
+                className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 disabled:opacity-60 disabled:cursor-not-allowed text-white py-4 rounded-lg text-sm font-bold transition-all duration-300 hover:shadow-lg hover:shadow-orange-600/25"
+              >
+                {status === 'loading' ? 'שולח...' : 'שלח פרטים'}
+              </button>
+
+              <p className="text-gray-600 text-xs text-center">
+                אחזור לשיחת התאמה אישית (ללא התחייבות)
+              </p>
+            </form>
+          )}
         </div>
       </div>
 

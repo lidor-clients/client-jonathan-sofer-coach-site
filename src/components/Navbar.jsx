@@ -11,8 +11,9 @@ export default function Navbar() {
   }, [])
 
   const links = [
-    { label: 'אודות', href: '#about' },
-    { label: 'שירותים', href: '#services' },
+    { label: 'מי אני', href: '#about' },
+    { label: 'הליווי', href: '#services' },
+    { label: 'המלצות', href: '#testimonials' },
     { label: 'צור קשר', href: '#contact' },
   ]
 
@@ -45,7 +46,7 @@ export default function Navbar() {
             href="#contact"
             className="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2 rounded text-sm font-semibold transition-colors duration-200"
           >
-            קבע פגישה
+            השאר פרטים
           </a>
         </div>
 
@@ -95,7 +96,7 @@ export default function Navbar() {
             onClick={() => setMenuOpen(false)}
             className="block mt-4 bg-orange-500 text-white text-center py-3 rounded text-sm font-semibold"
           >
-            קבע פגישה
+            השאר פרטים
           </a>
         </div>
       </div>
